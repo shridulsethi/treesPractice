@@ -24,37 +24,33 @@ class Spiral
     //traversal in spiral form.	
     ArrayList<Integer> findSpiral(Node root) 
     {
-        // Your code here
-        ArrayList<Integer> ans = new ArrayList<>();
-        if(root == null) {
-            return ans ;
-        }
-        Queue<Node> q = new LinkedList<>();
-        q.add(root);
-        int flag  = 0 ; 
+        ArrayList<Integer> result = new ArrayList<>();
+        if(root == null) return result;
         
-        while (! q.isEmpty()){
-            int size = q.size();
-            ArrayList<Integer> temp = new ArrayList<>();
-            for(int i =0 ; i< size ; i++){
-                if(q.peek().left != null)
-                q.add(q.peek().left);
-                if(q.peek().right != null)
-                q.add(q.peek().right);
-                temp.add(q.remove().data);    
-            }
-            if(flag ==0 ){
-                Collections.reverse(temp);
-            flag =1 ;
-            }
-            else{
-                flag = 0 ;
+        ArrayList<Node> nextLevel = new ArrayList<>();
+        ArrayList<Node> currentLevel; // = new ArrayList<>();
+        nextLevel.add(root);
+        boolean backward = true;
+        
+        while(nextLevel.size() > 0) {
+            currentLevel = nextLevel;
+            nextLevel = new ArrayList<>();
+            
+            for(int i = 0; i < currentLevel.size(); ++i) {
+                Node node = currentLevel.get(i);
+                result.add(node.data);
+                if(backward) {
+                    if(node.right != null) nextLevel.add(node.right);
+                    if(node.left != null) nextLevel.add(node.left);
+                } else {
+                    if(node.left != null) nextLevel.add(node.left);
+                    if(node.right != null) nextLevel.add(node.right);
+                }
             }
             
-            for(int i =0 ; i< temp.size(); i++){
-                ans.add(temp.get(i));
-            }
+            Collections.reverse(nextLevel);
+            backward = !backward;
         }
-        return ans ;
-    }
+        
+        return result;
 }
